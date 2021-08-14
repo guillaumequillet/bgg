@@ -10,7 +10,6 @@ module BGG
       @tiles = []
 
       @data["tilesets"].each do |tileset|
-        tileset = JSON.parse(File.read("#{File.dirname(filename)}/#{File.basename(tileset["source"])}"))
         tileset_image = tileset["image"]
         @tiles += Gosu::Image.load_tiles("#{File.dirname(filename)}/#{tileset_image}", tileset["tilewidth"].to_i, tileset["tileheight"].to_i, retro: true)
       end
