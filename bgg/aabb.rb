@@ -12,6 +12,10 @@ module BGG
         @origin.y + @size.y < other.origin.y)
     end
 
+    def mouse_in?
+      (BGG.mouse_x >= @origin.x && BGG.mouse_x <= @origin.x + @size.x && BGG.mouse_y >= @origin.y && BGG.mouse_y <= @origin.y + @size.y)
+    end
+
     def draw(color: Gosu::Color::WHITE, style: :solid, border_size: 1)
       case style
       when :solid

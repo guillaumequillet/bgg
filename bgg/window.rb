@@ -1,4 +1,12 @@
 module BGG
+  def self.mouse_x; @@mouse_x; end
+  def self.mouse_y; @@mouse_y; end
+
+  def self.set_mouse_coordinates(x: 0, y: 0)
+    @@mouse_x = x
+    @@mouse_y = y
+  end
+
   class Window < Gosu::Window
     MOUSE_Z = 10000
     def initialize(width: 640, height: 480, fullscreen: false, caption: 'untitled', resizable: false)
@@ -30,8 +38,12 @@ module BGG
       self.close! if @keys.has_key?(:escape) && id == @keys[:escape]
     end
 
-    def update
+    def update_mouse_coordinates
+      BGG.set_mouse_coordinates(x: self.mouse_x, y: self.mouse_y)
+    end
 
+    def update
+      update_mouse_coordinates
     end
 
     def draw

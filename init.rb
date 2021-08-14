@@ -14,12 +14,8 @@ class Window < BGG::Window
     super
 
     @aabb ||= BGG::AABB.new(origin: BGG::Vector.new(x: 10, y: 10), size: BGG::Vector.new(x: 100, y: 100))
-    
-    mouse = BGG::AABB.new(origin: BGG::Vector.new(x: self.mouse_x, y: self.mouse_y), size: BGG::Vector.new(x: 10, y: 10))
-
-    color = @aabb.collides?(mouse) ? Gosu::Color::RED : Gosu::Color::WHITE
+    color = @aabb.mouse_in? ? Gosu::Color::RED : Gosu::Color::WHITE
     @aabb.draw(color: color, style: :solid)
-    mouse.draw(color: Gosu::Color::GREEN)
   end
 end
 
