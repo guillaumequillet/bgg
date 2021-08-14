@@ -1,9 +1,9 @@
 module BGG
   class Window < Gosu::Window
     MOUSE_Z = 10000
-    def initialize(width: 640, height: 480, fullscreen: false, caption: 'untitled')
+    def initialize(width: 640, height: 480, fullscreen: false, caption: 'untitled', resizable: false)
       @width, @height, @fullscreen, @caption = width, height, fullscreen, caption
-      super(@width, @height, @fullscreen)
+      super(@width, @height, { fullscreen: @fullscreen, resizable: resizable })
       self.caption = @caption
       @keys = Hash.new
       @needs_cursor = true
