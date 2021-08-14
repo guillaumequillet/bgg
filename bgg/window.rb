@@ -46,6 +46,10 @@ module BGG
       update_mouse_coordinates
     end
 
+    def fill_with_color(color = Gosu::Color::WHITE)
+      Gosu.draw_rect(0, 0, self.width, self.height, color)
+    end
+
     def draw
       if defined?(@mouse_icon) && @needs_cursor
         @mouse_icon.draw_rot(self.mouse_x, self.mouse_y, MOUSE_Z, 0)
