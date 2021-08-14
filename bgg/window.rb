@@ -35,6 +35,7 @@ module BGG
     end
 
     def button_down(id)
+      super
       self.close! if @keys.has_key?(:escape) && id == @keys[:escape]
     end
 
