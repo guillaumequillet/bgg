@@ -4,11 +4,10 @@ class Window < BGG::Window
   def initialize
     super(width: 640, height: 480, caption: 'my game')
     set_escape_key(Gosu::KB_ESCAPE)
-    set_mouse_icon('./gfx/cursor.png')
   end
 
   def update
-
+    super
   end
 
   def draw

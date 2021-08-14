@@ -19,8 +19,7 @@ module BGG
 
     def hide_mouse_cursor; @needs_cursor = false; end
 
-    def show_mouse_cursor; @needs_cursor; true
-    end
+    def show_mouse_cursor; @needs_cursor = true; end
 
     def needs_cursor?
       return false if defined?(@mouse_icon)
@@ -29,6 +28,10 @@ module BGG
 
     def button_down(id)
       self.close! if @keys.has_key?(:escape) && id == @keys[:escape]
+    end
+
+    def update
+
     end
 
     def draw
