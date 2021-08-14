@@ -4,14 +4,13 @@ module BGG
   class TiledMap
     def initialize(filename)  
       @data = JSON.parse(File.read(filename))
-      @width, @height = @data["width"], @data["height"]
-      @tile_width, @tile_height = @data["tilewidth"], @data["tileheight"]
-      @layers = @data["layers"]
+      @width, @height = @data['width'], @data['height']
+      @tile_width, @tile_height = @data['tilewidth'], @data['tileheight']
+      @layers = @data['layers']
       @tiles = []
 
-      @data["tilesets"].each do |tileset|
-        tileset_image = tileset["image"]
-        @tiles += Gosu::Image.load_tiles("#{File.dirname(filename)}/#{tileset_image}", tileset["tilewidth"].to_i, tileset["tileheight"].to_i, retro: true)
+      @data['tilesets'].each do |tileset|
+        @tiles += Gosu::Image.load_tiles("#{File.dirname(filename)}/#{tileset['image']}", tileset['tilewidth'].to_i, tileset['tileheight'].to_i, retro: true)
       end
     end
   
@@ -20,8 +19,7 @@ module BGG
         @height.times do |y|
           @width.times do |x|
             tile = y * @width + x
-            tile_id = layer["data"][tile] - 1
-            # Tiled starts count at 1, not 0
+            tile_id = layer['data'][tile] - 1 # Tiled starts count at 1, not 0
             if tile_id != -1
               @tiles[tile_id].draw(x * @tile_width, y * @tile_height, 0)
             end
