@@ -1,4 +1,4 @@
-module Yume
+module BGG
   class Window < Gosu::Window
     def initialize(width: 640, height: 480, fullscreen: false, caption: 'untitled')
       @width, @height, @fullscreen, @caption = width, height, fullscreen, caption
