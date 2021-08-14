@@ -22,7 +22,10 @@ module BGG
           @width.times do |x|
             tile = y * @width + x
             tile_id = layer["data"][tile] - 1
-            @tiles[tile_id].draw(x * @tile_width, y * @tile_height, 0)
+            # Tiled starts count at 1, not 0
+            if tile_id != -1
+              @tiles[tile_id].draw(x * @tile_width, y * @tile_height, 0)
+            end
           end
         end
       end
