@@ -11,8 +11,13 @@ class Window < BGG::Window
     super(width: 640, height: 480, caption: 'my game')
     set_escape_key(Gosu::KB_ESCAPE)
     hide_mouse_cursor
-    @map = BGG::TiledMap.new('./gfx/test_autotile.json')
+    @map = BGG::TiledMap.new('./gfx/test.json')
     @camera = BGG::Camera3D.new(position: BGG::Vector.new(x: 0, y: 16, z: 32))
+  end
+
+  def button_down(id)
+    super
+    @map = BGG::TiledMap.new('./gfx/test.json') if id == Gosu::KB_SPACE
   end
 
   def update
@@ -24,17 +29,7 @@ class Window < BGG::Window
     super
     gl do
       @camera.look
-      @camera.angles.x += 0.2
-      glDisable(GL_TEXTURE_2D)
-      glPushMatrix
-      glScalef(128, 128, 128)
-      glBegin(GL_QUADS)
-        glVertex3f(0, 0, 0)
-        glVertex3f(0, 0, 1)
-        glVertex3f(1, 0, 1)
-        glVertex3f(1, 0, 0)
-      glEnd
-      glPopMatrix
+      @map.draw_3D
     end
   end
 end
