@@ -2,15 +2,20 @@ require 'json'
 
 module BGG
   class TiledMap
-    def initialize(filename)  
+    def initialize(filename: '', display: :view_2d)  
       @data = JSON.parse(File.read(filename))
       @width, @height = @data['width'], @data['height']
       @tile_width, @tile_height = @data['tilewidth'], @data['tileheight']
       @layers = @data['layers']
       @tiles = []
+      @textures = []
 
       @data['tilesets'].each do |tileset|
-        @tiles += Gosu::Image.load_tiles("#{File.dirname(filename)}/#{tileset['image']}", tileset['tilewidth'].to_i, tileset['tileheight'].to_i, retro: true)
+        tiles = Gosu::Image.load_tiles("#{File.dirname(filename)}/#{tileset['image']}", tileset['tilewidth'].to_i, tileset['tileheight'].to_i, retro: true)
+        tiles.each do |tile|
+          @tiles.push(tile) if display == :view_2d # for 2D drawing
+          @textures.push Texture.new(tile) if display == :view_3d # for 3D drawing
+        end
       end
 
       @blocks = []
@@ -54,17 +59,15 @@ module BGG
                   tile = y * @width + x
                   tile_id = layer['data'][tile] - 1 # Tiled starts count at 1, not 0
                   if tile_id != -1
-                    tex_info = @tiles[tile_id].gl_tex_info
-                    glBindTexture(GL_TEXTURE_2D, tex_info.tex_name)
-                    l, r, t, b = tex_info.left, tex_info.right, tex_info.top, tex_info.bottom
+                    glBindTexture(GL_TEXTURE_2D, @textures[tile_id].get_id)
                     glPushMatrix
                     glScalef(@tile_width, 1, @tile_height)
                     glTranslatef(x, 0, y)
                     glBegin(GL_QUADS)
-                      glTexCoord2d(l, t); glVertex3f(0, 0, 0)
-                      glTexCoord2d(l, b); glVertex3f(0, 0, 1)
-                      glTexCoord2d(r, b); glVertex3f(1, 0, 1)
-                      glTexCoord2d(r, t); glVertex3f(1, 0, 0)
+                      glTexCoord2d(0, 1); glVertex3f(0, 0, 0)
+                      glTexCoord2d(0, 0); glVertex3f(0, 0, 1)
+                      glTexCoord2d(1, 0); glVertex3f(1, 0, 1)
+                      glTexCoord2d(1, 1); glVertex3f(1, 0, 0)
                     glEnd
                     glPopMatrix
                   end

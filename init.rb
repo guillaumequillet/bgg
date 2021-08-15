@@ -11,7 +11,7 @@ class Window < BGG::Window
     super(width: 640, height: 480, caption: 'my game')
     set_escape_key(Gosu::KB_ESCAPE)
     hide_mouse_cursor
-    @map = BGG::TiledMap.new('./gfx/test.json')
+    @map = BGG::TiledMap.new(filename: './gfx/test.json', display: :view_3d)
     @camera = BGG::Camera3D.new(position: BGG::Vector.new(x: 0, y: 16, z: 32))
   end
 

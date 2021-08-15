@@ -1,12 +1,12 @@
 module BGG
   class Camera3D
     attr_accessor :angles, :position, :target
-    def initialize(position: Vector.new, target: Vector.new, fovy: 45.0, distance: 64, type: :fps)
+    def initialize(position: Vector.new, target: Vector.new, fovy: 45.0, distance: 64, type: :freefly)
       @position, @target, @fovy = position, target, fovy
       @angles = Vector.new(x: 0, y: 0, z: 0)
       @distance = distance
       @near, @far = 1, 1000
-      @type = type # :fps or :tps
+      @type = type # :fps, :freefly or :tps
     end
     
     def update
@@ -18,35 +18,42 @@ module BGG
       )
       straff_vectors = Vector.new(
         x: r_temp * Math.cos((@angles.x - 90.0) * Math::PI / 180.0),
-        y: Math.sin(@angles.y * Math::PI / 180.0),
         z: r_temp * Math.sin((@angles.x - 90.0) * Math::PI / 180.0)
       )
       
       # position update
       v = 1.2
-      if Gosu.button_down?(Gosu::KB_W)
-        @position.x += v * vectors.x
-        @position.z += v * vectors.z
-      elsif Gosu.button_down?(Gosu::KB_S)
-        @position.x -= v * vectors.x
-        @position.z -= v * vectors.z
-      end
-
-      if Gosu.button_down?(Gosu::KB_A)
-        @position.x += v * straff_vectors.x
-        @position.z += v * straff_vectors.z
-      elsif Gosu.button_down?(Gosu::KB_D)
-        @position.x -= v * straff_vectors.x
-        @position.z -= v * straff_vectors.z
+      case @type
+      when :freefly
+        if Gosu.button_down?(Gosu::KB_W)
+          @position.x += v * vectors.x
+          @position.y += v * vectors.y
+          @position.z += v * vectors.z
+        elsif Gosu.button_down?(Gosu::KB_S)
+          @position.x -= v * vectors.x
+          @position.y -= v * vectors.y
+          @position.z -= v * vectors.z
+        end
+        if Gosu.button_down?(Gosu::KB_A)
+          @position.x += v * straff_vectors.x
+          @position.z += v * straff_vectors.z
+        elsif Gosu.button_down?(Gosu::KB_D)
+          @position.x -= v * straff_vectors.x
+          @position.z -= v * straff_vectors.z
+        end
       end
 
       # view update
       angle_speed = 1.4
       @angles.x += angle_speed if Gosu.button_down?(Gosu::KB_RIGHT)
       @angles.x -= angle_speed if Gosu.button_down?(Gosu::KB_LEFT)
+      @angles.y += angle_speed if Gosu.button_down?(Gosu::KB_UP)
+      @angles.y -= angle_speed if Gosu.button_down?(Gosu::KB_DOWN)
+
+      @angles.y = @angles.y.clamp(-89, 89)
 
       case @type
-      when :fps
+      when :freefly
         @target.y = @position.y + @distance * vectors.y
         @target.x = @position.x + @distance * vectors.x
         @target.z = @position.z + @distance * vectors.z
