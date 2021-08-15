@@ -40,7 +40,7 @@ module BGG
         end
       end
 
-      @blocks.each {|block| block.draw(color: Gosu::Color.new(125, 255, 0, 0), style: :outline, border_size: 2)}
+      @blocks.each {|block| block.draw(color: Gosu::Color::RED, style: :outline, border_size: 2)}
     end
   end
 end
