@@ -1,7 +1,7 @@
 module BGG
   class Texture
     def initialize(filename)
-      gosu_image = Gosu::Image.new(filename, retro: true)
+      gosu_image = filename.is_a?(Gosu::Image) ? filename : Gosu::Image.new(filename, retro: true)
       array_of_pixels = gosu_image.to_blob
       tex_name_buf = ' ' * 4
       glGenTextures(1, tex_name_buf)
@@ -15,6 +15,13 @@ module BGG
 
     def get_id
       return @tex_name
+    end
+
+    def self.load_tiles(filename: '', tile_width: 16, tile_height: 16)
+      gosu_images = Gosu::Image.load_tiles(filename, tile_width, tile_height, retro: true)
+      textures = []
+      gosu_images.each {|gosu_image| textures.push Texture.new(gosu_image)}
+      return textures
     end
   end
 end

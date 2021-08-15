@@ -3,6 +3,7 @@ require 'json'
 module BGG
   class TiledMap
     def initialize(filename: '', display: :view_2d)  
+      @display = display
       @data = JSON.parse(File.read(filename))
       @width, @height = @data['width'], @data['height']
       @tile_width, @tile_height = @data['tilewidth'], @data['tileheight']
@@ -11,10 +12,14 @@ module BGG
       @textures = []
 
       @data['tilesets'].each do |tileset|
-        tiles = Gosu::Image.load_tiles("#{File.dirname(filename)}/#{tileset['image']}", tileset['tilewidth'].to_i, tileset['tileheight'].to_i, retro: true)
-        tiles.each do |tile|
-          @tiles.push(tile) if display == :view_2d # for 2D drawing
-          @textures.push Texture.new(tile) if display == :view_3d # for 3D drawing
+        path = "#{File.dirname(filename)}/#{tileset['image']}"
+        tile_width = tileset['tilewidth'].to_i
+        tile_height = tileset['tileheight'].to_i
+        case @display
+        when :view_2d
+          @tiles += Gosu::Image.load_tiles(path, tile_width, tile_height, retro: true)
+        when :view_3d
+          @textures += Texture.load_tiles(filename: path, tile_width: tile_width, tile_height: tile_height)
         end
       end
 
@@ -31,6 +36,15 @@ module BGG
     end
   
     def draw
+      case @display
+      when :view_2d
+        draw_2D
+      when :view_3d
+        draw_3D
+      end
+    end
+
+    def draw_2D
       @layers.each do |layer|
         if layer.has_key?('data') # layer of tiles
           @height.times do |y|

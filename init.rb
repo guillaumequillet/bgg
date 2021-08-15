@@ -29,7 +29,7 @@ class Window < BGG::Window
     super
     gl do
       @camera.look
-      @map.draw_3D
+      @map.draw
     end
   end
 end
