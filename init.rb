@@ -17,7 +17,7 @@ class Window < BGG::Window
 
   def button_down(id)
     super
-    @map = BGG::TiledMap.new('./gfx/test.json') if id == Gosu::KB_SPACE
+    @map = BGG::TiledMap.new(filename: './gfx/test.json', display: :view_3d) if id == Gosu::KB_SPACE
   end
 
   def update
@@ -29,7 +29,7 @@ class Window < BGG::Window
     super
     gl do
       @camera.look
-      @map.draw
+      @map.draw_3D(@camera)
     end
   end
 end

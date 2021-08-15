@@ -2,6 +2,12 @@ module BGG
   class Texture
     def initialize(filename)
       gosu_image = filename.is_a?(Gosu::Image) ? filename : Gosu::Image.new(filename, retro: true)
+      
+      # image flip
+      gosu_image = Gosu.render(gosu_image.width, gosu_image.height, retro: true) do
+        gosu_image.draw_rot(gosu_image.width / 2, gosu_image.height / 2, 0, 0, 0.5, 0.5, 1, -1)
+      end
+      
       array_of_pixels = gosu_image.to_blob
       tex_name_buf = ' ' * 4
       glGenTextures(1, tex_name_buf)
